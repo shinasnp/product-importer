@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "importer_app",
     "celery",
     "channels",
+    'django_eventstream',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +51,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'django_grip.GripMiddleware',
 ]
 
 ROOT_URLCONF = "product_importer.urls"
@@ -129,18 +131,18 @@ STATIC_URL = "/static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 #
-ASGI_APPLICATION = "product_importer.routing.application"
+ASGI_APPLICATION = "product_importer.asgi.application"
 REDIS_URL = "redis://localhost:6379"
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("localhost", 6379)],
-        },
-    },
-    "ROUTING": "product_importer.routing.application",
-}
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [("localhost", 6379)],
+#         },
+#     },
+#     "ROUTING": "product_importer.asgi.application",
+# }
 
 CELERY_BROKER_URL = os.environ.get("CLOUDAMQP_URL", REDIS_URL)
 CELERY_RESULT_BACKEND = None
@@ -179,3 +181,8 @@ AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
 AWS_S3_VERIFY = True
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+EVENTSTREAM_STORAGE_CLASS = 'django_eventstream.storage.DjangoModelStorage'
+
+GRIP_URL = 'http://localhost:5561'
+
