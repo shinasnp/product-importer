@@ -8,6 +8,7 @@ import requests
 from asgiref.sync import async_to_sync
 from celery import shared_task
 from channels.layers import get_channel_layer
+from django_eventstream import send_event
 
 from .models import ProductFile, ProductInfo, ProductWebHook
 
@@ -34,15 +35,21 @@ def stream_file_update(file_id, current_row, total_rows):
 def process_file_to_db(file_id):
     try:
         file_obj = ProductFile.objects.get(id=file_id)
+        total_rows = len(list(csv.reader(codecs.iterdecode(file_obj.file, "utf-8"))))
         csvfile = csv.reader(codecs.iterdecode(file_obj.file, "utf-8"))
         next(csvfile)
-        total_rows = 123  # hard coded -needs to remove
         inserted_rows = 0
         for row in csvfile:
             ProductInfo.objects.update_or_create(
                 sku=row[1].lower(), defaults={"name": row[0], "description": row[2]}
             )
             inserted_rows = inserted_rows + 1
+            # Added sse to get the upload progress
+            send_event('test', 'message', {
+                "total_rows": total_rows,
+                "current_row": inserted_rows,
+                "file_id": file_id,
+            })
             # stream_file_update(file_id, inserted_rows, total_rows)
     except Exception as e:
         print(e)
