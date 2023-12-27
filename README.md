@@ -1,32 +1,31 @@
-# product-importer
-# Objective
+# Product Importer System
 
-Acme Inc needs to be able to import products from a CSV file and into their SQL database. Given there are half a million
-products to be imported into the database, ACME Inc wants you to develop robust and scale APIs for the same
-Specification
+# Objective:
+A comprehensive product importing system is needed to seamlessly import products from a CSV file into an SQL database. With a substantial volume of half a million products, the challenge is to develop robust and scalable APIs to handle this data migration efficiently.
 
-## STORY 1:
-As an API user, I should be able to upload a large CSV file of 500K products (see here). If there are existing duplicates,
-it should overwrite the data. Deduplication can be done using the SKU of the product. SKU is case insensitive.
-Though not in the CSV file, some products should be active and others should be inactive. The SKU is expected to be
-unique.
-Develop API endpoint(s) for the same. Note that the API should consider scalability and be well optimized in terms
-of resource consumption as well.
+## System Requirements:
 
-### STORY 1A:
-There should be an endpoint to track the progress of the file upload. The most commonly used implementation is SSE
-but feel free to explore other options as well.
+    1. CSV File Import:
+        Implement an API endpoint that allows users to upload a large CSV file containing 500K products.
+        Ensure that the system can handle duplicates by overwriting existing data, with deduplication based on the SKU of the product (SKU is case insensitive).
+        Assign activity status (active or inactive) to products, even if this information is not explicitly present in the CSV file.
+        Design the API with a focus on scalability and resource optimization.
 
-### STORY 2:
-As an API user, I should be able to perform all the CRUD operations for the products. This is preferably on a URL like
-/products.
-The GET endpoint should also support filtering the products by SKU, name, active and description. The endpoint should
-also support pagination.
+    2. Upload Progress Tracking:
+        Create an endpoint to track the progress of the file upload.
+        Consider various options for implementation, such as Server-Sent Events (SSE) or other alternatives.
 
-### STORY 3:
-As an API user, it should be possible to delete ALL existing products
+    3. CRUD Operations for Products:
+        Enable API users to perform all CRUD (Create, Read, Update, Delete) operations for products.
+        Design the API to be accessible through a URL like /products.
+        Implement a GET endpoint that supports filtering products by SKU, name, activity status, and description.
+        Provide support for pagination to enhance user experience.
 
-### STORY 4:
-As an API user, it should be able to configure multiple webhooks which should be triggered when product is created
-and updated using the endpoints developed in Story 2
-Note: Design should be scalable and should not impact application performance.
+    4. Bulk Deletion of Products:
+        Implement functionality that allows users to delete ALL existing products through the API.
+
+    5. Webhook Configuration:
+        Enable API users to configure multiple webhooks that trigger when a product is created or updated using the endpoints developed in Requirement 3.
+        Emphasize a scalable design that does not negatively impact application performance.
+
+
